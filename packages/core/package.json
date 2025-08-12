@@ -1,0 +1,22 @@
+{
+  "name": "@calc-exp-hyrz-v2/core",
+  "version": "1.0.0",
+  "description": "a tool to calculate the exp needed to reach the target level",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "tsdown": "^0.12.9",
+    "vitest": "^2.1.8"
+  }
+}
