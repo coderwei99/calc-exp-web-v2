@@ -1,5 +1,6 @@
 export { canReachTargetExperience } from "./core";
 export { logger } from "./logger";
+export { EXP_PER_LEVEL } from "./exp";
 
 
 export function test(w: string) {
