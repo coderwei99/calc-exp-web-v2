@@ -5,7 +5,7 @@ export function canReachTargetExperience(
     // 当前等级 
     currentLevel,
     // 目标等级
-    targetLevel = 110,
+    targetLevel,
     // 已有经验
     currentExp,
     // 开始时间
@@ -78,5 +78,22 @@ export function canReachTargetExperience(
   console.log('总体力: ', recoveredStamina + totalDailyStamina + extraStamina);
   console.log('总经验值: ', totalExperience);
   // 判断是否达到目标经验值
-  return callback(startTime, endTime, expDiff, totalExperience, days, staminaExp);
+
+  callback(startTime, endTime, expDiff, totalExperience, days, staminaExp);
+
+  // canReachTarget: Math.random() > 0.3,
+  // daysNeeded: Math.floor(Math.random() * timeRange.totalDays) + 1,
+  // totalExpNeeded: Math.floor(Math.random() * 50000) + 10000,
+  // dailyExpGain: calculatedTotals.totalDailyExp + calculatedTotals.totalDailyExpFromStamina,
+  // shortfall: Math.floor(Math.random() * 10000),
+  return {
+    // 是否可以达成
+    canReachTarget: totalExperience >= expDiff,
+    // 所需总经验
+    totalExpNeeded: totalExperience,
+    // 日均经验
+    dailyExpGain: totalExperience / days,
+    // 经验缺口
+    shortfall: totalExperience >= expDiff ? 0 : totalExperience - expDiff
+  };
 }
