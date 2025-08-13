@@ -167,13 +167,14 @@ export default function Home() {
     return calculationData
   }
   const handleCalculate = async () => {
-    const { weeklyResources, timeRange, staminaSystem, dailyExpSources, currentStatus, calculatedTotals } =
-      collectFormData()
     // Validation
-    if (!startDate || !endDate) {
+    if (!startDate || !startDate) {
       toast.error('请选择开始和结束时间')
       return
     }
+
+    const { weeklyResources, timeRange, staminaSystem, dailyExpSources, currentStatus, calculatedTotals } =
+      collectFormData()
 
     if (!currentStatus.currentLevel || !currentStatus.targetLevel) {
       toast.error('请输入当前等级和目标等级')
@@ -184,7 +185,6 @@ export default function Home() {
       toast.error('目标等级必须大于当前等级')
       return
     }
-
     setIsCalculating(true)
     // Simulate calculation delay
     await new Promise((resolve) => setTimeout(resolve, 500))
