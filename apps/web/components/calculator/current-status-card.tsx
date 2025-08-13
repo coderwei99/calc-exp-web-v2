@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Calculator } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Calculator } from 'lucide-react'
 
 interface CurrentStatusCardProps {
-  currentLevel: string;
-  currentExp: string;
-  targetLevel: string;
-  onCurrentLevelChange: (value: string) => void;
-  onCurrentExpChange: (value: string) => void;
-  onTargetLevelChange: (value: string) => void;
+  currentLevel: string
+  currentExp: string
+  targetLevel: string
+  onCurrentLevelChange: (value: string) => void
+  onCurrentExpChange: (value: string) => void
+  onTargetLevelChange: (value: string) => void
 }
 
 export function CurrentStatusCard({
@@ -20,7 +20,7 @@ export function CurrentStatusCard({
   targetLevel,
   onCurrentLevelChange,
   onCurrentExpChange,
-  onTargetLevelChange
+  onTargetLevelChange,
 }: CurrentStatusCardProps) {
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -29,9 +29,7 @@ export function CurrentStatusCard({
           <Calculator className="w-5 h-5 text-blue-500" />
           <span>当前状态</span>
         </CardTitle>
-        <CardDescription>
-          输入当前等级信息和目标
-        </CardDescription>
+        <CardDescription>输入当前等级信息和目标</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -71,5 +69,5 @@ export function CurrentStatusCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
