@@ -94,6 +94,6 @@ export function canReachTargetExperience(
     // 日均经验
     dailyExpGain: totalExperience / days,
     // 经验缺口
-    shortfall: totalExperience >= expDiff ? 0 : totalExperience - expDiff
+    shortfall: totalExperience >= expDiff ? 0 : expDiff - totalExperience
   };
 }
