@@ -52,9 +52,11 @@ export default function Home() {
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
 
   const [formData, setFormData] = useState<FormData>(() => {
-    const savedData = localStorage.getItem('naruto-calculator-data')
-    if (savedData) {
-      return JSON.parse(savedData).formData
+    if (typeof window !== 'undefined') {
+      const savedData = localStorage.getItem('naruto-calculator-data')
+      if (savedData) {
+        return JSON.parse(savedData).formData
+      }
     }
     return {
       currentLevel: '',
