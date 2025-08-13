@@ -51,17 +51,23 @@ export default function Home() {
   const [isCalculating, setIsCalculating] = useState(false)
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
 
-  const [formData, setFormData] = useState<FormData>({
-    currentLevel: '1',
-    currentExp: '2',
-    targetLevel: '3',
-    dailyHarvestExp: '',
-    dailyTreasureExp: '',
-    weeklyStamina: '',
-    weeklyExp: '',
-    staminaToExpRatio: '',
-    dailyStaminaPurchase: '0',
-    isKageLevel: false,
+  const [formData, setFormData] = useState<FormData>(() => {
+    const savedData = localStorage.getItem('naruto-calculator-data')
+    if (savedData) {
+      return JSON.parse(savedData).formData
+    }
+    return {
+      currentLevel: '',
+      currentExp: '',
+      targetLevel: '',
+      dailyHarvestExp: '',
+      dailyTreasureExp: '',
+      weeklyStamina: '',
+      weeklyExp: '',
+      staminaToExpRatio: '',
+      dailyStaminaPurchase: '',
+      isKageLevel: false,
+    }
   })
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -179,7 +185,7 @@ export default function Home() {
 
     setIsCalculating(true)
     // Simulate calculation delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     const { canReachTarget, totalExpNeeded, dailyExpGain, shortfall } = canReachTargetExperience({
       currentLevel: currentStatus.currentLevel,
@@ -205,6 +211,7 @@ export default function Home() {
       dailyExpGain,
       shortfall,
     }
+    console.log('mockResult', mockResult)
 
     setCalculationResult(mockResult)
     setIsCalculating(false)
