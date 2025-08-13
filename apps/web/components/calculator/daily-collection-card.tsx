@@ -29,7 +29,7 @@ export function DailyCollectionCard({ isKageLevel, onKageLevelChange }: DailyCol
         <div className="flex items-center space-x-2">
           <Checkbox id="kage-level" checked={isKageLevel} onCheckedChange={onKageLevelChange} />
           <Label htmlFor="kage-level" className="text-sm font-medium">
-            超影等级
+            超影
           </Label>
         </div>
 
