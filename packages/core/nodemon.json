@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src"
+  ],
+  "ext": "ts,js,mjs",
+  "ignore": [
+    "dist/*",
+    "node_modules/*"
+  ],
+  "exec": "node dist/index.mjs"
+}
