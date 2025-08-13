@@ -1,50 +1,50 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Calculator, TrendingUp, Award, Target } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Navigation } from '@/components/navigation';
-import { TimePeriodCard } from '@/components/calculator/time-period-card';
-import { CurrentStatusCard } from '@/components/calculator/current-status-card';
-import { DailyExpCard } from '@/components/calculator/daily-exp-card';
-import { DailyStaminaCard } from '@/components/calculator/daily-stamina-card';
-import { WeeklyResourcesCard } from '@/components/calculator/weekly-resources-card';
-import { ConversionRateCard } from '@/components/calculator/conversion-rate-card';
-import { DailyCollectionCard } from '@/components/calculator/daily-collection-card';
-import { GameMechanicsInfo } from '@/components/calculator/game-mechanics-info';
-import { CalculationTips } from '@/components/calculator/calculation-tips';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Calculator, TrendingUp, Award, Target } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { Navigation } from '@/components/navigation'
+import { TimePeriodCard } from '@/components/calculator/time-period-card'
+import { CurrentStatusCard } from '@/components/calculator/current-status-card'
+import { DailyExpCard } from '@/components/calculator/daily-exp-card'
+import { DailyStaminaCard } from '@/components/calculator/daily-stamina-card'
+import { WeeklyResourcesCard } from '@/components/calculator/weekly-resources-card'
+import { ConversionRateCard } from '@/components/calculator/conversion-rate-card'
+import { DailyCollectionCard } from '@/components/calculator/daily-collection-card'
+import { GameMechanicsInfo } from '@/components/calculator/game-mechanics-info'
+import { CalculationTips } from '@/components/calculator/calculation-tips'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { toast } from 'sonner'
+import { canReachTargetExperience } from '@calc-exp-hyrz-v2/core'
 interface FormData {
-  currentLevel: string;
-  currentExp: string;
-  targetLevel: string;
-  dailyHarvestExp: string;
-  dailyTreasureExp: string;
-  weeklyStamina: string;
-  weeklyExp: string;
-  staminaToExpRatio: string;
-  dailyStaminaPurchase: string;
-  isKageLevel: boolean;
+  currentLevel: string
+  currentExp: string
+  targetLevel: string
+  dailyHarvestExp: string
+  dailyTreasureExp: string
+  weeklyStamina: string
+  weeklyExp: string
+  staminaToExpRatio: string
+  dailyStaminaPurchase: string
+  isKageLevel: boolean
 }
 
 interface CalculationResult {
-  canReachTarget: boolean;
-  daysNeeded: number;
-  totalExpNeeded: number;
-  dailyExpGain: number;
-  shortfall: number;
+  canReachTarget: boolean
+  daysNeeded: number
+  totalExpNeeded: number
+  dailyExpGain: number
+  shortfall: number
 }
 
 export default function Home() {
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  const [showResults, setShowResults] = useState(false);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null);
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
+  const [showResults, setShowResults] = useState(false)
+  const [isCalculating, setIsCalculating] = useState(false)
+  const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
 
   const [formData, setFormData] = useState<FormData>({
     currentLevel: '',
@@ -56,65 +56,66 @@ export default function Home() {
     weeklyExp: '',
     staminaToExpRatio: '',
     dailyStaminaPurchase: '0',
-    isKageLevel: false
-  });
+    isKageLevel: false,
+  })
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem('naruto-calculator-data');
+    const savedData = localStorage.getItem('naruto-calculator-data')
     if (savedData) {
       try {
-        const parsed = JSON.parse(savedData);
-        if (parsed.formData) setFormData(parsed.formData);
-        if (parsed.startDate) setStartDate(new Date(parsed.startDate));
-        if (parsed.endDate) setEndDate(new Date(parsed.endDate));
+        const parsed = JSON.parse(savedData)
+        if (parsed.formData) setFormData(parsed.formData)
+        if (parsed.startDate) setStartDate(new Date(parsed.startDate))
+        if (parsed.endDate) setEndDate(new Date(parsed.endDate))
       } catch (error) {
-        console.error('Failed to load saved data:', error);
+        console.error('Failed to load saved data:', error)
       }
     }
-  }, []);
+  }, [])
 
   // Save data to localStorage whenever form data changes
   useEffect(() => {
     const dataToSave = {
       formData,
       startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString()
-    };
-    localStorage.setItem('naruto-calculator-data', JSON.stringify(dataToSave));
-  }, [formData, startDate, endDate]);
+      endDate: endDate?.toISOString(),
+    }
+    localStorage.setItem('naruto-calculator-data', JSON.stringify(dataToSave))
+  }, [formData, startDate, endDate])
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
-    }));
-  };
+      [field]: value,
+    }))
+  }
 
   const collectFormData = () => {
-    const ramenStamina = formData.isKageLevel ? 300 : 150;
-    const fixedDailyStamina = ramenStamina + 50 + 50; // 拉面 + 铜币 + 好友
-    const naturalStaminaPerDay = 240; // 每6分钟1点，24小时=240点
+    const ramenStamina = formData.isKageLevel ? 300 : 150
+    const fixedDailyStamina = ramenStamina + 50 + 50 // 拉面 + 铜币 + 好友
+    const naturalStaminaPerDay = 240 // 每6分钟1点，24小时=240点
 
     const calculationData = {
       timeRange: {
         startDate: startDate?.toISOString(),
         endDate: endDate?.toISOString(),
-        totalDays: startDate && endDate ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) : 0
+        totalDays:
+          startDate && endDate ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) : 0,
       },
       currentStatus: {
         currentLevel: Number(formData.currentLevel) || 0,
         currentExp: Number(formData.currentExp) || 0,
-        targetLevel: Number(formData.targetLevel) || 0
+        targetLevel: Number(formData.targetLevel) || 0,
       },
       dailyExpSources: {
         harvestExp: Number(formData.dailyHarvestExp) || 0,
-        treasureExp: Number(formData.dailyTreasureExp) || 0
+        treasureExp: Number(formData.dailyTreasureExp) || 0,
       },
       weeklyResources: {
         weeklyStamina: Number(formData.weeklyStamina) || 0,
         weeklyExp: Number(formData.weeklyExp) || 0,
-        dailyStaminaFromWeekly: Math.round((Number(formData.weeklyStamina) || 0) / 7 * 100) / 100,
-        dailyExpFromWeekly: Math.round((Number(formData.weeklyExp) || 0) / 7 * 100) / 100
+        dailyStaminaFromWeekly: Math.round(((Number(formData.weeklyStamina) || 0) / 7) * 100) / 100,
+        dailyExpFromWeekly: Math.round(((Number(formData.weeklyExp) || 0) / 7) * 100) / 100,
       },
       staminaSystem: {
         staminaToExpRatio: Number(formData.staminaToExpRatio) || 0,
@@ -122,53 +123,57 @@ export default function Home() {
         purchasedStaminaPerDay: (Number(formData.dailyStaminaPurchase) || 0) * 50,
         fixedDailyStamina: fixedDailyStamina,
         naturalStaminaPerDay: naturalStaminaPerDay,
-        isKageLevel: formData.isKageLevel
+        isKageLevel: formData.isKageLevel,
       },
       calculatedTotals: {
-        totalDailyExp: (Number(formData.dailyHarvestExp) || 0) +
+        totalDailyExp:
+          (Number(formData.dailyHarvestExp) || 0) +
           (Number(formData.dailyTreasureExp) || 0) +
-          Math.round((Number(formData.weeklyExp) || 0) / 7 * 100) / 100,
-        totalDailyStamina: fixedDailyStamina + naturalStaminaPerDay +
-          ((Number(formData.dailyStaminaPurchase) || 0) * 50) +
-          Math.round((Number(formData.weeklyStamina) || 0) / 7 * 100) / 100,
-        totalDailyExpFromStamina: (fixedDailyStamina + naturalStaminaPerDay +
-          ((Number(formData.dailyStaminaPurchase) || 0) * 50) +
-          Math.round((Number(formData.weeklyStamina) || 0) / 7 * 100) / 100) *
-          (Number(formData.staminaToExpRatio) || 0)
-      }
-    };
+          Math.round(((Number(formData.weeklyExp) || 0) / 7) * 100) / 100,
+        totalDailyStamina:
+          fixedDailyStamina +
+          naturalStaminaPerDay +
+          (Number(formData.dailyStaminaPurchase) || 0) * 50 +
+          Math.round(((Number(formData.weeklyStamina) || 0) / 7) * 100) / 100,
+        totalDailyExpFromStamina:
+          (fixedDailyStamina +
+            naturalStaminaPerDay +
+            (Number(formData.dailyStaminaPurchase) || 0) * 50 +
+            Math.round(((Number(formData.weeklyStamina) || 0) / 7) * 100) / 100) *
+          (Number(formData.staminaToExpRatio) || 0),
+      },
+    }
 
-    console.log('=== 火影忍者升级计算器 - 表单数据收集 ===');
-    console.log('收集时间:', new Date().toLocaleString());
-    console.log('完整数据:', calculationData);
-    console.log('==========================================');
+    console.log('=== 火影忍者升级计算器 - 表单数据收集 ===')
+    console.log('收集时间:', new Date().toLocaleString())
+    console.log('完整数据:', calculationData)
+    console.log('==========================================')
 
-    return calculationData;
-  };
+    return calculationData
+  }
 
   const handleCalculate = async () => {
-    const data = collectFormData();
+    const data = collectFormData()
 
     // Validation
     if (!startDate || !endDate) {
-      toast.error('请选择开始和结束时间');
-      return;
+      toast.error('请选择开始和结束时间')
+      return
     }
 
     if (!data.currentStatus.currentLevel || !data.currentStatus.targetLevel) {
-      toast.error('请输入当前等级和目标等级');
-      return;
+      toast.error('请输入当前等级和目标等级')
+      return
     }
 
     if (data.currentStatus.currentLevel >= data.currentStatus.targetLevel) {
-      toast.error('目标等级必须大于当前等级');
-      return;
+      toast.error('目标等级必须大于当前等级')
+      return
     }
 
-    setIsCalculating(true);
-
+    setIsCalculating(true)
     // Simulate calculation delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
     // Mock calculation result
     const mockResult: CalculationResult = {
@@ -176,20 +181,20 @@ export default function Home() {
       daysNeeded: Math.floor(Math.random() * data.timeRange.totalDays) + 1,
       totalExpNeeded: Math.floor(Math.random() * 50000) + 10000,
       dailyExpGain: data.calculatedTotals.totalDailyExp + data.calculatedTotals.totalDailyExpFromStamina,
-      shortfall: Math.floor(Math.random() * 10000)
-    };
+      shortfall: Math.floor(Math.random() * 10000),
+    }
 
-    setCalculationResult(mockResult);
-    setIsCalculating(false);
-    setShowResults(true);
+    setCalculationResult(mockResult)
+    setIsCalculating(false)
+    setShowResults(true)
 
-    toast.success('计算完成！');
-  };
+    toast.success('计算完成！')
+  }
 
   const resetCalculation = () => {
-    setShowResults(false);
-    setCalculationResult(null);
-  };
+    setShowResults(false)
+    setCalculationResult(null)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300">
@@ -202,10 +207,12 @@ export default function Home() {
 
         <div className="relative overflow-hidden">
           {/* Main Content */}
-          <div className={cn(
-            "transition-all duration-700 ease-in-out",
-            showResults ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
-          )}>
+          <div
+            className={cn(
+              'transition-all duration-700 ease-in-out',
+              showResults ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
+            )}
+          >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Form */}
               <div className="lg:col-span-2 space-y-6">
@@ -283,10 +290,12 @@ export default function Home() {
           </div>
 
           {/* Results Panel */}
-          <div className={cn(
-            "fixed inset-0 transition-all duration-700 ease-in-out flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 z-50",
-            showResults ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
-          )}>
+          <div
+            className={cn(
+              'fixed inset-0 transition-all duration-700 ease-in-out flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 z-50',
+              showResults ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            )}
+          >
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl p-8 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -305,12 +314,14 @@ export default function Home() {
               {calculationResult && (
                 <div className="space-y-6">
                   {/* Result Summary */}
-                  <Card className={cn(
-                    "border-2",
-                    calculationResult.canReachTarget
-                      ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30"
-                      : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30"
-                  )}>
+                  <Card
+                    className={cn(
+                      'border-2',
+                      calculationResult.canReachTarget
+                        ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30'
+                        : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30'
+                    )}
+                  >
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3 mb-4">
                         {calculationResult.canReachTarget ? (
@@ -325,8 +336,7 @@ export default function Home() {
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             {calculationResult.canReachTarget
                               ? `预计需要 ${calculationResult.daysNeeded} 天`
-                              : `还差 ${calculationResult.shortfall.toLocaleString()} 经验`
-                            }
+                              : `还差 ${calculationResult.shortfall.toLocaleString()} 经验`}
                           </p>
                         </div>
                       </div>
@@ -373,16 +383,15 @@ export default function Home() {
                         <CardTitle className="text-sm text-gray-600 dark:text-gray-400">经验缺口</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className={cn(
-                          "text-2xl font-bold",
-                          calculationResult.shortfall > 0
-                            ? "text-red-600 dark:text-red-400"
-                            : "text-green-600 dark:text-green-400"
-                        )}>
-                          {calculationResult.shortfall > 0
-                            ? calculationResult.shortfall.toLocaleString()
-                            : '无缺口'
-                          }
+                        <p
+                          className={cn(
+                            'text-2xl font-bold',
+                            calculationResult.shortfall > 0
+                              ? 'text-red-600 dark:text-red-400'
+                              : 'text-green-600 dark:text-green-400'
+                          )}
+                        >
+                          {calculationResult.shortfall > 0 ? calculationResult.shortfall.toLocaleString() : '无缺口'}
                         </p>
                       </CardContent>
                     </Card>
@@ -394,5 +403,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
