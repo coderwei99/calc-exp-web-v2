@@ -17,7 +17,12 @@ import { GameMechanicsInfo } from '@/components/calculator/game-mechanics-info'
 import { CalculationTips } from '@/components/calculator/calculation-tips'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
+
 import { canReachTargetExperience } from '@calc-exp-hyrz-v2/core'
+import { logger } from '@calc-exp-hyrz-v2/core'
+import { RECOVERYPER } from '../lib/constants'
+
 interface FormData {
   currentLevel: string
   currentExp: string
@@ -47,9 +52,9 @@ export default function Home() {
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
 
   const [formData, setFormData] = useState<FormData>({
-    currentLevel: '',
-    currentExp: '',
-    targetLevel: '',
+    currentLevel: '1',
+    currentExp: '2',
+    targetLevel: '3',
     dailyHarvestExp: '',
     dailyTreasureExp: '',
     weeklyStamina: '',
@@ -75,10 +80,12 @@ export default function Home() {
 
   // Save data to localStorage whenever form data changes
   useEffect(() => {
+    console.log('startDate', startDate)
+
     const dataToSave = {
       formData,
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
+      startDate: startDate ? format(startDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
+      endDate: endDate ? format(endDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
     }
     localStorage.setItem('naruto-calculator-data', JSON.stringify(dataToSave))
   }, [formData, startDate, endDate])
@@ -97,8 +104,8 @@ export default function Home() {
 
     const calculationData = {
       timeRange: {
-        startDate: startDate?.toISOString(),
-        endDate: endDate?.toISOString(),
+        startDate: format(startDate!, 'yyyy-MM-dd HH:mm:ss'),
+        endDate: format(endDate!, 'yyyy-MM-dd HH:mm:ss'),
         totalDays:
           startDate && endDate ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) : 0,
       },
@@ -151,22 +158,21 @@ export default function Home() {
 
     return calculationData
   }
-
   const handleCalculate = async () => {
-    const data = collectFormData()
-
+    const { weeklyResources, timeRange, staminaSystem, dailyExpSources, currentStatus, calculatedTotals } =
+      collectFormData()
     // Validation
     if (!startDate || !endDate) {
       toast.error('请选择开始和结束时间')
       return
     }
 
-    if (!data.currentStatus.currentLevel || !data.currentStatus.targetLevel) {
+    if (!currentStatus.currentLevel || !currentStatus.targetLevel) {
       toast.error('请输入当前等级和目标等级')
       return
     }
 
-    if (data.currentStatus.currentLevel >= data.currentStatus.targetLevel) {
+    if (currentStatus.currentLevel >= currentStatus.targetLevel) {
       toast.error('目标等级必须大于当前等级')
       return
     }
@@ -175,24 +181,44 @@ export default function Home() {
     // Simulate calculation delay
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
+    const { canReachTarget, totalExpNeeded, dailyExpGain, shortfall } = canReachTargetExperience({
+      currentLevel: currentStatus.currentLevel,
+      currentExp: currentStatus.currentExp,
+      targetLevel: currentStatus.targetLevel,
+      startTime: timeRange.startDate,
+      endTime: timeRange.endDate,
+      recoveryPer5Min: RECOVERYPER,
+      dailyFixedStamina: staminaSystem.dailyStaminaPurchase,
+      extraDailyStamina: staminaSystem.fixedDailyStamina,
+      extraDailyExp: [dailyExpSources.harvestExp, dailyExpSources.treasureExp],
+      extraStamina: weeklyResources.weeklyStamina,
+      extraStaminaExp: weeklyResources.weeklyExp,
+      staminaExp: staminaSystem.staminaToExpRatio,
+      callback: logger,
+    })
+
     // Mock calculation result
     const mockResult: CalculationResult = {
-      canReachTarget: Math.random() > 0.3,
-      daysNeeded: Math.floor(Math.random() * data.timeRange.totalDays) + 1,
-      totalExpNeeded: Math.floor(Math.random() * 50000) + 10000,
-      dailyExpGain: data.calculatedTotals.totalDailyExp + data.calculatedTotals.totalDailyExpFromStamina,
-      shortfall: Math.floor(Math.random() * 10000),
+      canReachTarget,
+      daysNeeded: Math.floor(Math.random() * timeRange.totalDays) + 1,
+      totalExpNeeded,
+      dailyExpGain,
+      shortfall,
     }
 
     setCalculationResult(mockResult)
     setIsCalculating(false)
     setShowResults(true)
+    const tbody = document.querySelector('body')!
+    tbody.style.overflow = 'hidden'
 
     toast.success('计算完成！')
   }
 
   const resetCalculation = () => {
     setShowResults(false)
+    const tbody = document.querySelector('body')!
+    tbody.style.overflow = ''
     setCalculationResult(null)
   }
 
@@ -210,7 +236,7 @@ export default function Home() {
           <div
             className={cn(
               'transition-all duration-700 ease-in-out',
-              showResults ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
+              showResults ? '-translate-x-full opacity-0 ' : 'translate-x-0 opacity-100'
             )}
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
