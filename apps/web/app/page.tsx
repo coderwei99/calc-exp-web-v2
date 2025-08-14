@@ -18,7 +18,7 @@ import { GameMechanicsInfo } from '@/components/calculator/game-mechanics-info'
 import { CalculationTips } from '@/components/calculator/calculation-tips'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { format } from 'date-fns'
+import { format, set } from 'date-fns'
 
 import { canReachTargetExperience } from '@calc-exp-hyrz-v2/core'
 import { logger } from '@calc-exp-hyrz-v2/core'
@@ -43,6 +43,8 @@ interface CalculationResult {
   totalExpNeeded: number
   dailyExpGain: number
   shortfall: number
+  staminaEquivalent: number
+  dailyExpDetails: { date: string; exp: string | number; difference: string | number }[]
 }
 
 export default function Home() {
@@ -51,27 +53,22 @@ export default function Home() {
   const [showResults, setShowResults] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
-
-  const [formData, setFormData] = useState<FormData>(() => {
-    if (typeof window !== 'undefined') {
-      const savedData = localStorage.getItem('naruto-calculator-data')
-      if (savedData) {
-        return JSON.parse(savedData).formData
+  const savedData = localStorage.getItem('naruto-calculator-data')
+    ? JSON.parse(localStorage.getItem('naruto-calculator-data')!).formData
+    : {
+        currentLevel: '',
+        currentExp: '',
+        targetLevel: '',
+        dailyHarvestExp: '',
+        dailyTreasureExp: '',
+        weeklyStamina: '',
+        weeklyExp: '',
+        staminaToExpRatio: '',
+        dailyStaminaPurchase: '',
+        isKageLevel: false,
       }
-    }
-    return {
-      currentLevel: '',
-      currentExp: '',
-      targetLevel: '',
-      dailyHarvestExp: '',
-      dailyTreasureExp: '',
-      weeklyStamina: '',
-      weeklyExp: '',
-      staminaToExpRatio: '',
-      dailyStaminaPurchase: '',
-      isKageLevel: false,
-    }
-  })
+
+  const [formData, setFormData] = useState<FormData>(savedData)
   // Load data from localStorage on component mount
   useEffect(() => {
     const savedData = localStorage.getItem('naruto-calculator-data')
@@ -89,8 +86,6 @@ export default function Home() {
 
   // Save data to localStorage whenever form data changes
   useEffect(() => {
-    console.log('startDate', startDate)
-
     const dataToSave = {
       formData,
       startDate: startDate ? format(startDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
@@ -110,11 +105,10 @@ export default function Home() {
     const ramenStamina = formData.isKageLevel ? 300 : 150
     const fixedDailyStamina = ramenStamina + 50 + 50 // 拉面 + 铜币 + 好友
     const naturalStaminaPerDay = 240 // 每6分钟1点，24小时=240点
-
     const calculationData = {
       timeRange: {
-        startDate: format(startDate!, 'yyyy-MM-dd HH:mm:ss'),
-        endDate: format(endDate!, 'yyyy-MM-dd HH:mm:ss'),
+        startDate: format(set(startDate!, { hours: 0, minutes: 0, seconds: 0 })!, 'yyyy-MM-dd HH:mm:ss'),
+        endDate: format(set(endDate!, { hours: 23, minutes: 59, seconds: 59 })!, 'yyyy-MM-dd HH:mm:ss'),
         totalDays:
           startDate && endDate ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) : 0,
       },
@@ -141,23 +135,6 @@ export default function Home() {
         naturalStaminaPerDay: naturalStaminaPerDay,
         isKageLevel: formData.isKageLevel,
       },
-      calculatedTotals: {
-        totalDailyExp:
-          (Number(formData.dailyHarvestExp) || 0) +
-          (Number(formData.dailyTreasureExp) || 0) +
-          Math.round(((Number(formData.weeklyExp) || 0) / 7) * 100) / 100,
-        totalDailyStamina:
-          fixedDailyStamina +
-          naturalStaminaPerDay +
-          (Number(formData.dailyStaminaPurchase) || 0) * 50 +
-          Math.round(((Number(formData.weeklyStamina) || 0) / 7) * 100) / 100,
-        totalDailyExpFromStamina:
-          (fixedDailyStamina +
-            naturalStaminaPerDay +
-            (Number(formData.dailyStaminaPurchase) || 0) * 50 +
-            Math.round(((Number(formData.weeklyStamina) || 0) / 7) * 100) / 100) *
-          (Number(formData.staminaToExpRatio) || 0),
-      },
     }
 
     console.log('=== 火影忍者升级计算器 - 表单数据收集 ===')
@@ -174,8 +151,7 @@ export default function Home() {
       return
     }
 
-    const { weeklyResources, timeRange, staminaSystem, dailyExpSources, currentStatus, calculatedTotals } =
-      collectFormData()
+    const { weeklyResources, timeRange, staminaSystem, dailyExpSources, currentStatus } = collectFormData()
 
     if (!currentStatus.currentLevel || !currentStatus.targetLevel) {
       toast.error('请输入当前等级和目标等级')
@@ -190,29 +166,32 @@ export default function Home() {
     // Simulate calculation delay
     await new Promise((resolve) => setTimeout(resolve, 500))
 
-    const { canReachTarget, totalExpNeeded, dailyExpGain, shortfall } = canReachTargetExperience({
-      currentLevel: currentStatus.currentLevel,
-      currentExp: currentStatus.currentExp,
-      targetLevel: currentStatus.targetLevel,
-      startTime: timeRange.startDate,
-      endTime: timeRange.endDate,
-      recoveryPer5Min: RECOVERYPER,
-      dailyFixedStamina: staminaSystem.dailyStaminaPurchase,
-      extraDailyStamina: staminaSystem.fixedDailyStamina,
-      extraDailyExp: [dailyExpSources.harvestExp, dailyExpSources.treasureExp],
-      extraStamina: weeklyResources.weeklyStamina,
-      extraStaminaExp: weeklyResources.weeklyExp,
-      staminaExp: staminaSystem.staminaToExpRatio,
-      callback: logger,
-    })
+    const { canReachTarget, totalExpNeeded, dailyExpGain, shortfall, staminaEquivalent, dailyExpDetails } =
+      canReachTargetExperience({
+        currentLevel: currentStatus.currentLevel,
+        currentExp: currentStatus.currentExp,
+        targetLevel: currentStatus.targetLevel,
+        startTime: timeRange.startDate,
+        endTime: timeRange.endDate,
+        recoveryPer5Min: RECOVERYPER,
+        dailyFixedStamina: staminaSystem.dailyStaminaPurchase,
+        extraDailyStamina: staminaSystem.fixedDailyStamina,
+        extraDailyExp: [dailyExpSources.harvestExp, dailyExpSources.treasureExp],
+        extraStamina: weeklyResources.weeklyStamina,
+        extraStaminaExp: weeklyResources.weeklyExp,
+        staminaExp: staminaSystem.staminaToExpRatio,
+        callback: logger,
+      })
 
     // Mock calculation result
     const mockResult: CalculationResult = {
       canReachTarget,
       daysNeeded: Math.floor(Math.random() * timeRange.totalDays) + 1,
       totalExpNeeded,
-      dailyExpGain,
-      shortfall,
+      staminaEquivalent: Number(staminaEquivalent),
+      dailyExpGain: Number(dailyExpGain),
+      shortfall: Number(shortfall),
+      dailyExpDetails,
     }
     console.log('mockResult', mockResult)
 
@@ -416,7 +395,9 @@ export default function Home() {
 
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle className="text-sm text-gray-600 dark:text-gray-400">经验缺口</CardTitle>
+                        <CardTitle className="text-sm text-gray-600 dark:text-gray-400">
+                          {calculationResult.shortfall > 0 ? '经验缺口 / 折合体力' : '经验溢出 / 折合体力'}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p
@@ -427,7 +408,10 @@ export default function Home() {
                               : 'text-green-600 dark:text-green-400'
                           )}
                         >
-                          {calculationResult.shortfall > 0 ? calculationResult.shortfall.toLocaleString() : '无缺口'}
+                          {Math.abs(calculationResult.shortfall).toLocaleString()} {' / '}
+                          <span className="text-base font-normal text-gray-500 dark:text-gray-400">
+                            {Math.abs(calculationResult.staminaEquivalent).toLocaleString()}
+                          </span>
                         </p>
                       </CardContent>
                     </Card>
