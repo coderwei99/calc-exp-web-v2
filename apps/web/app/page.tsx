@@ -146,8 +146,13 @@ export default function Home() {
   }
   const handleCalculate = async () => {
     // Validation
-    if (!startDate || !startDate) {
+    if (!startDate || !endDate) {
       toast.error('请选择开始和结束时间')
+      return
+    }
+
+    if (endDate <= startDate) {
+      toast.error('结束时间必须晚于开始时间')
       return
     }
 
