@@ -110,7 +110,7 @@ export default function LevelExperiencePage() {
               <TableIcon className="w-6 h-6 text-orange-500" />
               <span>等级经验对照表</span>
             </CardTitle>
-            <CardDescription>升级下一等级所需经验，以及累积经验总和。本表格数据来源于官方文档。</CardDescription>
+            <CardDescription>升级下一等级所需经验，以及累积经验总和。本表格数据来源于公开资源。</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Search */}
@@ -133,14 +133,13 @@ export default function LevelExperiencePage() {
                 搜索
               </Button>
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                数据来源:{' '}
                 <a
                   href="https://docs.qq.com/sheet/DR1FCbG5uU3RIZGxm?tab=BB08J2"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline"
                 >
-                  官方文档
+                  数据来源
                 </a>
               </span>
             </div>
