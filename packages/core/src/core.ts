@@ -1,5 +1,6 @@
 import { calcExpDiff } from './calcExpDiff';
 import { logger } from './logger';
+import { keepDecimals } from './utils';
 export function canReachTargetExperience(
   {
     // 当前等级 
@@ -90,10 +91,12 @@ export function canReachTargetExperience(
     // 是否可以达成
     canReachTarget: totalExperience >= expDiff,
     // 所需总经验
-    totalExpNeeded: totalExperience,
+    totalExpNeeded: expDiff,
     // 日均经验
-    dailyExpGain: totalExperience / days,
+    dailyExpGain: keepDecimals(totalExperience / days),
     // 经验缺口
-    shortfall: totalExperience >= expDiff ? 0 : expDiff - totalExperience
+    shortfall: keepDecimals(expDiff - totalExperience),
+    // 折合体力
+    staminaEquivalent: keepDecimals((expDiff - totalExperience) / staminaExp, 0)
   };
 }
