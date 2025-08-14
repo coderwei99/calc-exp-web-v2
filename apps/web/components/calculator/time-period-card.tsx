@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -17,6 +18,9 @@ interface TimePeriodCardProps {
 }
 
 export function TimePeriodCard({ startDate, endDate, onStartDateChange, onEndDateChange }: TimePeriodCardProps) {
+  const [startOpen, setStartOpen] = useState(false)
+  const [endOpen, setEndOpen] = useState(false)
+
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="pb-4">
@@ -28,9 +32,10 @@ export function TimePeriodCard({ startDate, endDate, onStartDateChange, onEndDat
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* 开始时间 */}
           <div className="space-y-2">
             <Label htmlFor="start-date">开始时间</Label>
-            <Popover>
+            <Popover open={startOpen} onOpenChange={setStartOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -41,13 +46,23 @@ export function TimePeriodCard({ startDate, endDate, onStartDateChange, onEndDat
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" selected={startDate} onSelect={onStartDateChange} initialFocus />
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={(date) => {
+                    onStartDateChange(date)
+                    setStartOpen(false) // 选中后关闭
+                  }}
+                  initialFocus
+                />
               </PopoverContent>
             </Popover>
           </div>
+
+          {/* 结束时间 */}
           <div className="space-y-2">
             <Label htmlFor="end-date">结束时间</Label>
-            <Popover>
+            <Popover open={endOpen} onOpenChange={setEndOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -58,11 +73,20 @@ export function TimePeriodCard({ startDate, endDate, onStartDateChange, onEndDat
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" selected={endDate} onSelect={onEndDateChange} initialFocus />
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={(date) => {
+                    onEndDateChange(date)
+                    setEndOpen(false) // 选中后关闭
+                  }}
+                  initialFocus
+                />
               </PopoverContent>
             </Popover>
           </div>
         </div>
+
         {startDate && endDate && (
           <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
             <p className="text-sm text-blue-700 dark:text-blue-300">
