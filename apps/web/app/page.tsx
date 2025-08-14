@@ -6,6 +6,7 @@ import { Calculator, TrendingUp, Award, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Navigation } from '@/components/navigation'
+import { Footer } from '@/components/footer'
 import { TimePeriodCard } from '@/components/calculator/time-period-card'
 import { CurrentStatusCard } from '@/components/calculator/current-status-card'
 import { DailyExpCard } from '@/components/calculator/daily-exp-card'
@@ -437,6 +438,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

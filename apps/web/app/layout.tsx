@@ -6,8 +6,8 @@ import { Toaster } from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '火影忍者升级计算器',
-  description: '计算火影忍者游戏中指定时间内是否能达到目标等级',
+  title: '火影忍者工具箱',
+  description: '提供火影忍者手游常用工具,例如: 计算火影忍者游戏中指定时间内是否能达到目标等级、忍者数据等...',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
