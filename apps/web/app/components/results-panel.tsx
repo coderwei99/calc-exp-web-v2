@@ -18,7 +18,7 @@ export default function ResultsPanel({
   calculationResult: CalculationResult | null
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl p-8 max-w-4xl w-full mx-4 overflow-y-auto">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl p-8 max-w-4xl w-full mx-4 max-h-[80vh] scrollbar-custom overflow-y-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
           <TrendingUp className="w-6 h-6 mr-2 text-green-500" />

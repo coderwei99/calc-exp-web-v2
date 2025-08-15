@@ -210,12 +210,16 @@ export default function Home() {
     setCalculationResult(mockResult)
     setIsCalculating(false)
     setShowResults(true)
+    const tbody = document.querySelector('body')!
+    tbody.style.overflow = 'hidden'
 
     toast.success('计算完成！')
   }
 
   const resetCalculation = () => {
     setShowResults(false)
+    const tbody = document.querySelector('body')!
+    tbody.style.overflow = ''
     setCalculationResult(null)
   }
 
