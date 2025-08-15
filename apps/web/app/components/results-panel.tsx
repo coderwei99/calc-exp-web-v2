@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { TrendingUp, Award, Target } from 'lucide-react'
+import { TrendingUp, Award, Target, ListCollapse } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CalculationResult } from '../page'
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function ResultsPanel({
   resetCalculation,
@@ -15,7 +18,7 @@ export default function ResultsPanel({
   calculationResult: CalculationResult | null
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl p-8 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl p-8 max-w-4xl w-full mx-4 overflow-y-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
           <TrendingUp className="w-6 h-6 mr-2 text-green-500" />
@@ -116,7 +119,41 @@ export default function ResultsPanel({
         </div>
       )}
 
-      {}
+      <div className="flex items-center justify-between my-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+          <ListCollapse className="w-6 h-6 mr-2 text-green-500" />
+          详情
+        </h2>
+      </div>
+
+      <ScrollArea className="h-[600px] w-full rounded-md border">
+        <Table>
+          <TableHeader className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+            <TableRow>
+              <TableHead className="w-48 text-center font-semibold">日期</TableHead>
+              <TableHead className="text-center font-semibold">当前等级</TableHead>
+              <TableHead className="text-center font-semibold">当前经验</TableHead>
+              <TableHead className="text-center font-semibold">所差总经验</TableHead>
+              <TableHead className="text-center font-semibold">日均经验</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {calculationResult?.dailyExpDetails.map((data) => (
+              <TableRow
+                key={data.date}
+                data-level={data.date}
+                className={cn('hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors')}
+              >
+                <TableCell className="text-center font-medium">{data.date}</TableCell>
+                <TableCell className="text-center">{data.currentLevel}</TableCell>
+                <TableCell className="text-center">{data.exp}</TableCell>
+                <TableCell className="text-center">{data.difference}</TableCell>
+                <TableCell className="text-center">{data.dailyExp}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </ScrollArea>
     </div>
   )
 }
