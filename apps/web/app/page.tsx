@@ -53,22 +53,19 @@ export default function Home() {
   const [showResults, setShowResults] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null)
-  const savedData = localStorage.getItem('naruto-calculator-data')
-    ? JSON.parse(localStorage.getItem('naruto-calculator-data')!).formData
-    : {
-        currentLevel: '',
-        currentExp: '',
-        targetLevel: '',
-        dailyHarvestExp: '',
-        dailyTreasureExp: '',
-        weeklyStamina: '',
-        weeklyExp: '',
-        staminaToExpRatio: '',
-        dailyStaminaPurchase: '',
-        isKageLevel: false,
-      }
-
-  const [formData, setFormData] = useState<FormData>(savedData)
+  const [hydrated, setHydrated] = useState(false)
+  const [formData, setFormData] = useState<FormData>({
+    currentLevel: '',
+    currentExp: '',
+    targetLevel: '',
+    dailyHarvestExp: '',
+    dailyTreasureExp: '',
+    weeklyStamina: '',
+    weeklyExp: '',
+    staminaToExpRatio: '',
+    dailyStaminaPurchase: '',
+    isKageLevel: false,
+  })
   // Load data from localStorage on component mount
   useEffect(() => {
     const savedData = localStorage.getItem('naruto-calculator-data')
@@ -78,6 +75,7 @@ export default function Home() {
         if (parsed.formData) setFormData(parsed.formData)
         if (parsed.startDate) setStartDate(new Date(parsed.startDate))
         if (parsed.endDate) setEndDate(new Date(parsed.endDate))
+        setHydrated(true) // 标记已加载
       } catch (error) {
         console.error('Failed to load saved data:', error)
       }
@@ -86,13 +84,14 @@ export default function Home() {
 
   // Save data to localStorage whenever form data changes
   useEffect(() => {
+    if (!hydrated) return // 没初始化完成前跳过
     const dataToSave = {
       formData,
       startDate: startDate ? format(startDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
       endDate: endDate ? format(endDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
     }
     localStorage.setItem('naruto-calculator-data', JSON.stringify(dataToSave))
-  }, [formData, startDate, endDate])
+  }, [formData, startDate, endDate, hydrated])
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({
