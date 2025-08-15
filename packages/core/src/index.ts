@@ -2,9 +2,6 @@ export { canReachTargetExperience } from "./core";
 export { logger } from "./logger";
 export { EXP_PER_LEVEL } from "./exp";
 
-import { canReachTargetExperience } from './core';
-import { logger } from "./logger";
-
 export function test(w: string) {
   console.log('tesqqsdasdsssdt', w);
 }

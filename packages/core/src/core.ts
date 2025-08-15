@@ -2,6 +2,7 @@ import { calcExpDiff } from './calcExpDiff';
 import { logger } from './logger';
 import { keepDecimals } from './utils';
 import { EXP_PER_LEVEL } from './exp';
+import { DailyExpDetail } from './types';
 
 export function canReachTargetExperience(
   {
@@ -51,7 +52,14 @@ export function canReachTargetExperience(
     staminaExp: number;
     extraStaminaExp: number;
     callback: (startTime: string, endTime: string, expDiff: number, totalExperience: number, days: number, staminaExp: number) => void;
-  }) {
+  }): {
+    canReachTarget: boolean;
+    totalExpNeeded: number;
+    dailyExpGain: number;
+    shortfall: number;
+    staminaEquivalent: number;
+    dailyExpDetails: DailyExpDetail;
+  } {
   // 计算所需经验差
   const expDiff = calcExpDiff(currentLevel, currentExp, targetLevel);
   console.log('expDiff: ', expDiff);
@@ -91,7 +99,7 @@ export function canReachTargetExperience(
   console.log('总经验值: ', totalExperience);
 
   // 生成每日经验详情
-  const dailyExpDetails: { date: string; exp: number; difference: number; currentLevel: number; dailyExp: number; }[] = [];
+  const dailyExpDetails: DailyExpDetail = [];
   let currentLevelTracker = currentLevel;
   let currentExpAccumulated = currentExp;
   for (let i = 0; i < days; i++) {
@@ -126,10 +134,10 @@ export function canReachTargetExperience(
 
     dailyExpDetails.push({
       date: dateStr,
-      exp: keepDecimals(currentExpAccumulated, 0),
-      difference: keepDecimals(difference, 0),
-      currentLevel: currentLevelTracker,
-      dailyExp: keepDecimals(dailyExp, 0)
+      exp: keepDecimals(currentExpAccumulated, 0), // 当前经验
+      difference: keepDecimals(difference, 0), // 还差多少经验到目标
+      currentLevel: currentLevelTracker, // 当前等级
+      dailyExp: keepDecimals(dailyExp, 0) // 日均经验
     });
   }
 

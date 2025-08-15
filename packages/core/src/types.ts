@@ -20,3 +20,11 @@ export interface CalculationResult {
   requiredStamina: number;
   dailyExtraStaminaNeeded?: number;
 }
+
+export type DailyExpDetail = {
+  date: string;
+  exp: number;
+  difference: number;
+  currentLevel: number;
+  dailyExp: number;
+}[];
