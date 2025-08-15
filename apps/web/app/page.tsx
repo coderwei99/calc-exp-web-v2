@@ -76,11 +76,11 @@ export default function Home() {
         if (parsed.formData) setFormData(parsed.formData)
         if (parsed.startDate) setStartDate(new Date(parsed.startDate))
         if (parsed.endDate) setEndDate(new Date(parsed.endDate))
-        setHydrated(true) // 标记已加载
       } catch (error) {
         console.error('Failed to load saved data:', error)
       }
     }
+    setHydrated(true) // 标记已加载
   }, [])
 
   // Save data to localStorage whenever form data changes
@@ -92,6 +92,7 @@ export default function Home() {
       endDate: endDate ? format(endDate!, 'yyyy-MM-dd HH:mm:ss') : undefined,
     }
     localStorage.setItem('naruto-calculator-data', JSON.stringify(dataToSave))
+    setHydrated(true) // 标记已加载
   }, [formData, startDate, endDate, hydrated])
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
