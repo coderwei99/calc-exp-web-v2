@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { TrendingUp, Award, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CalculationResult } from '../../page'
+import { CalculationResult } from '../page'
 
 export default function ResultsPanel({
   resetCalculation,
@@ -115,6 +115,8 @@ export default function ResultsPanel({
           </div>
         </div>
       )}
+
+      {}
     </div>
   )
 }

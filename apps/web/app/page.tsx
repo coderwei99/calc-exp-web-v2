@@ -23,7 +23,7 @@ import { format, set } from 'date-fns'
 import { canReachTargetExperience } from '@calc-exp-hyrz-v2/core'
 import { logger } from '@calc-exp-hyrz-v2/core'
 import { RECOVERYPER } from '../lib/constants'
-import ResultsPanel from './level-experience/components/results-panel'
+import ResultsPanel from './components/results-panel'
 
 interface FormData {
   currentLevel: string
