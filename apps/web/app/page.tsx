@@ -45,7 +45,13 @@ export interface CalculationResult {
   dailyExpGain: number
   shortfall: number
   staminaEquivalent: number
-  dailyExpDetails: { date: string; exp: string | number; difference: string | number }[]
+  dailyExpDetails: {
+    date: string
+    exp: string | number
+    difference: string | number
+    currentLevel: any
+    dailyExp: string | number
+  }[]
 }
 
 export default function Home() {
@@ -204,16 +210,12 @@ export default function Home() {
     setCalculationResult(mockResult)
     setIsCalculating(false)
     setShowResults(true)
-    const tbody = document.querySelector('body')!
-    tbody.style.overflow = 'hidden'
 
     toast.success('计算完成！')
   }
 
   const resetCalculation = () => {
     setShowResults(false)
-    const tbody = document.querySelector('body')!
-    tbody.style.overflow = ''
     setCalculationResult(null)
   }
 
