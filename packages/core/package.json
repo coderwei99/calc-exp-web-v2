@@ -6,16 +6,11 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./src/index.ts",
-    "./__test__/core.spec": "./src/__test__/core.spec.ts",
-    "./__test__/index.spec": "./src/__test__/index.spec.ts",
-    "./calcExpDiff": "./src/calcExpDiff.ts",
-    "./core": "./src/core.ts",
-    "./exp": "./src/exp.ts",
-    "./logger": "./src/logger.ts",
-    "./types": "./src/types.ts",
-    "./utils": "./src/utils.ts",
-    "./package.json": "./package.json"
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
     "build": "tsdown --declaration --declarationMap",
