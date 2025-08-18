@@ -71,7 +71,7 @@ export default function Home() {
     weeklyStamina: '',
     weeklyExp: '',
     staminaToExpRatio: '',
-    dailyStaminaPurchase: '',
+    dailyStaminaPurchase: '0',
     isKageLevel: false,
     hasMonthlyCard: false,
   })
@@ -176,6 +176,17 @@ export default function Home() {
       toast.error('目标等级必须大于当前等级')
       return
     }
+
+    if (!formData.dailyHarvestExp || !formData.dailyTreasureExp) {
+      toast.error('请填写丰饶之间和每日宝箱经验')
+      return
+    }
+
+    if (!formData.staminaToExpRatio) {
+      toast.error('请填写体力与经验的转换比例')
+      return
+    }
+
     setIsCalculating(true)
     // Simulate calculation delay
     await new Promise((resolve) => setTimeout(resolve, 500))
