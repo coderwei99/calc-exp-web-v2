@@ -50,7 +50,7 @@ export function DailyCollectionCard({
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <CircleAlert className="w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-help" />
+                  <CircleAlert className="w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>是否提取月卡体力</p>
