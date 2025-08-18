@@ -20,7 +20,7 @@ export function DailyStaminaCard({ dailyStaminaPurchase, onDailyStaminaPurchaseC
           <span>每日购买体力</span>
         </CardTitle>
         <CardDescription>
-          每天可以购买体力，但有上限（单位：50体力/次，最多15次/天）
+          每天可以购买体力，但有上限（单位：50体力/次，最多{MAX_DAILY_STAMINA_PURCHASE}次/天）
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -31,7 +31,7 @@ export function DailyStaminaCard({ dailyStaminaPurchase, onDailyStaminaPurchaseC
               <SelectValue placeholder="选择每天购买次数" />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 16 }, (_, i) => (
+              {Array.from({ length: MAX_DAILY_STAMINA_PURCHASE + 1 }, (_, i) => (
                 <SelectItem key={i} value={i.toString()}>
                   {i}次/天 {i > 0 && `(${i * 50}体力/天)`}
                 </SelectItem>

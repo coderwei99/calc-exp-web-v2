@@ -1,8 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Clock, Coins, Gift, Users, Zap } from 'lucide-react';
+import { MAX_DAILY_STAMINA_PURCHASE } from '../../lib/constants'
 
 export function GameMechanicsInfo() {
   return (
@@ -30,7 +28,9 @@ export function GameMechanicsInfo() {
             <Coins className="w-4 h-4 text-green-500" />
             <div>
               <p className="text-sm font-medium">购买体力</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">50体力/次，最多15次/天</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                50体力/次，最多{MAX_DAILY_STAMINA_PURCHASE}次/天
+              </p>
             </div>
           </div>
           
