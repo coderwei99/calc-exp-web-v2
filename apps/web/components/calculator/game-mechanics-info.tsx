@@ -1,5 +1,8 @@
-"use client";
+'use client'
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Clock, Coins, Gift, Users, Zap } from 'lucide-react'
 import { MAX_DAILY_STAMINA_PURCHASE } from '../../lib/constants'
 
 export function GameMechanicsInfo() {
@@ -10,9 +13,7 @@ export function GameMechanicsInfo() {
           <Zap className="w-5 h-5 text-orange-500" />
           <span>游戏机制</span>
         </CardTitle>
-        <CardDescription>
-          重要的游戏内置规则
-        </CardDescription>
+        <CardDescription>重要的游戏内置规则</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
@@ -23,7 +24,7 @@ export function GameMechanicsInfo() {
               <p className="text-xs text-gray-600 dark:text-gray-400">每6分钟恢复1点 (240点/天)</p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 p-3 bg-green-50 dark:bg-green-950/30 rounded-lg">
             <Coins className="w-4 h-4 text-green-500" />
             <div>
@@ -33,7 +34,7 @@ export function GameMechanicsInfo() {
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 p-3 bg-purple-50 dark:bg-purple-950/30 rounded-lg">
             <Users className="w-4 h-4 text-purple-500" />
             <div>
@@ -44,5 +45,5 @@ export function GameMechanicsInfo() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
