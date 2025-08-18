@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function CalculationTips() {
   return (
@@ -16,5 +16,5 @@ export function CalculationTips() {
         <p>• 结果仅供参考，实际游戏可能有差异</p>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Zap } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Zap } from 'lucide-react'
 
 interface ConversionRateCardProps {
-  staminaToExpRatio: string;
-  onStaminaToExpRatioChange: (value: string) => void;
+  staminaToExpRatio: string
+  onStaminaToExpRatioChange: (value: string) => void
 }
 
 export function ConversionRateCard({ staminaToExpRatio, onStaminaToExpRatioChange }: ConversionRateCardProps) {
-  const ratio = Number(staminaToExpRatio) || 0;
-  
+  const ratio = Number(staminaToExpRatio) || 0
+
   return (
     <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="pb-4">
@@ -20,15 +20,11 @@ export function ConversionRateCard({ staminaToExpRatio, onStaminaToExpRatioChang
           <Zap className="w-5 h-5 text-yellow-500" />
           <span>转换比例</span>
         </CardTitle>
-        <CardDescription>
-          体力与经验的转换比例
-        </CardDescription>
+        <CardDescription>体力与经验的转换比例,可以通过装备或精英扫荡自行换算出1点体力等价的经验</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <Label htmlFor="stamina-exp-ratio">
-            1点体力 = {ratio > 0 ? ratio : '?'} 经验
-          </Label>
+          <Label htmlFor="stamina-exp-ratio">1点体力 = {ratio > 0 ? ratio : '?'} 经验</Label>
           <Input
             id="stamina-exp-ratio"
             type="number"
@@ -40,5 +36,5 @@ export function ConversionRateCard({ staminaToExpRatio, onStaminaToExpRatioChang
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
