@@ -1,13 +1,14 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ShoppingCart } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ShoppingCart } from 'lucide-react'
+import { MAX_DAILY_STAMINA_PURCHASE } from '../../lib/constants'
 
 interface DailyStaminaCardProps {
-  dailyStaminaPurchase: string;
-  onDailyStaminaPurchaseChange: (value: string) => void;
+  dailyStaminaPurchase: string
+  onDailyStaminaPurchaseChange: (value: string) => void
 }
 
 export function DailyStaminaCard({ dailyStaminaPurchase, onDailyStaminaPurchaseChange }: DailyStaminaCardProps) {
@@ -25,10 +26,7 @@ export function DailyStaminaCard({ dailyStaminaPurchase, onDailyStaminaPurchaseC
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="daily-stamina-purchase">购买次数/天</Label>
-          <Select 
-            value={dailyStaminaPurchase} 
-            onValueChange={onDailyStaminaPurchaseChange}
-          >
+          <Select value={dailyStaminaPurchase} onValueChange={onDailyStaminaPurchaseChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="选择每天购买次数" />
             </SelectTrigger>
@@ -48,5 +46,5 @@ export function DailyStaminaCard({ dailyStaminaPurchase, onDailyStaminaPurchaseC
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
