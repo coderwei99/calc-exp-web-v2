@@ -36,6 +36,7 @@ interface FormData {
   staminaToExpRatio: string
   dailyStaminaPurchase: string
   isKageLevel: boolean
+  hasMonthlyCard: boolean
 }
 
 export interface CalculationResult {
@@ -72,6 +73,7 @@ export default function Home() {
     staminaToExpRatio: '',
     dailyStaminaPurchase: '',
     isKageLevel: false,
+    hasMonthlyCard: false,
   })
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -268,7 +270,9 @@ export default function Home() {
 
                 <DailyCollectionCard
                   isKageLevel={formData.isKageLevel}
+                  hasMonthlyCard={formData.hasMonthlyCard}
                   onKageLevelChange={(checked) => handleInputChange('isKageLevel', checked)}
+                  onMonthlyCardChange={(checked) => handleInputChange('hasMonthlyCard', checked)}
                 />
 
                 <DailyStaminaCard
