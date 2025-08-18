@@ -1,6 +1,10 @@
 import { EXP_PER_LEVEL } from '@calc-exp-hyrz-v2/core';
 
+// 多少分钟能恢复一点体力
 export const RECOVERYPER = 6;
+
+// 每天最多能购买多少体力
+export const MAX_DAILY_STAMINA_PURCHASE = 30;
 
 export interface LevelData {
   level: number;
