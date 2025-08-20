@@ -37,9 +37,9 @@ export function Footer() {
         </div>
 
         {/* tips */}
-        <div className="flex items-center justify-center text-xs text-muted-foreground/70 space-x-2">
+        {/* <div className="flex items-center justify-center text-xs text-muted-foreground/70 space-x-2">
           木叶飞舞之处，火亦生生不息
-        </div>
+        </div> */}
       </div>
     </footer>
   )
