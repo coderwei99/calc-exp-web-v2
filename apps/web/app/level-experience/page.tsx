@@ -40,7 +40,7 @@ export default function LevelExperiencePage() {
 
     // Auto-remove highlight after 0.5s
     setTimeout(() => {
-      setHighlightedLevel(null)
+      // setHighlightedLevel(null)
     }, 500)
   }
 
@@ -204,7 +204,7 @@ export default function LevelExperiencePage() {
                 <strong>说明:</strong> 升级所需经验 = EXP[Lv] - EXP[Lv-1]，表格显示下一等级所需经验值。
               </p>
               <p>
-                <strong>备注:</strong> 165级为满级，已无法继续升级。
+                <strong>备注:</strong> 现阶段165级为满级，已无法继续升级。
               </p>
             </div>
           </CardContent>
