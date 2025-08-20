@@ -123,6 +123,11 @@ export default function LevelExperiencePage() {
                   value={searchLevel}
                   onChange={(e) => setSearchLevel(e.target.value)}
                   className="pl-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch()
+                    }
+                  }}
                 />
               </div>
               <Button
