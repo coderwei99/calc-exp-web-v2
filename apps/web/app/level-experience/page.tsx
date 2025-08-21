@@ -151,15 +151,22 @@ export default function LevelExperiencePage() {
 
             {/* Table */}
             <div className="relative" ref={tableRef}>
-              <ScrollArea className="h-[600px] w-full rounded-md border" ref={scrollAreaRef}>
+              {/* Fixed Header */}
+              <div className="bg-gray-50 dark:bg-gray-800 border rounded-t-md">
                 <Table>
-                  <TableHeader className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                  <TableHeader>
                     <TableRow>
-                      <TableHead className="w-24 text-center font-semibold">等级</TableHead>
+                      <TableHead className="w-48 text-center font-semibold">等级</TableHead>
                       <TableHead className="text-center font-semibold">所需经验</TableHead>
                       <TableHead className="text-center font-semibold">累积经验</TableHead>
                     </TableRow>
                   </TableHeader>
+                </Table>
+              </div>
+
+              {/* Scrollable Body */}
+              <ScrollArea className="h-[600px] w-full border-x border-b rounded-b-md" ref={scrollAreaRef}>
+                <Table>
                   <TableBody>
                     {levelData.map((data) => (
                       <TableRow
@@ -171,7 +178,7 @@ export default function LevelExperiencePage() {
                             'border-2 border-orange-400 dark:border-orange-500 bg-orange-50 dark:bg-orange-950/30'
                         )}
                       >
-                        <TableCell className="text-center font-medium">
+                        <TableCell className="w-48 text-center font-medium">
                           Lv{data.level}
                           {data.level < 165 && <span className="text-gray-400 text-sm ml-1">→ Lv{data.level + 1}</span>}
                         </TableCell>
@@ -190,7 +197,6 @@ export default function LevelExperiencePage() {
                   </TableBody>
                 </Table>
               </ScrollArea>
-
               {/* Back to Top Button */}
               {showBackToTop && (
                 <Button

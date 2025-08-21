@@ -126,34 +126,44 @@ export default function ResultsPanel({
         </h2>
       </div>
 
-      <ScrollArea className="h-[600px] w-full rounded-md border">
-        <Table>
-          <TableHeader className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-            <TableRow>
-              <TableHead className="w-48 text-center font-semibold">日期</TableHead>
-              <TableHead className="text-center font-semibold">当前等级</TableHead>
-              <TableHead className="text-center font-semibold">当前经验</TableHead>
-              <TableHead className="text-center font-semibold">所差总经验</TableHead>
-              <TableHead className="text-center font-semibold">日均经验</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {calculationResult?.dailyExpDetails.map((data) => (
-              <TableRow
-                key={data.date}
-                data-level={data.date}
-                className={cn('hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors')}
-              >
-                <TableCell className="text-center font-medium">{data.date}</TableCell>
-                <TableCell className="text-center">{data.currentLevel}</TableCell>
-                <TableCell className="text-center">{data.exp}</TableCell>
-                <TableCell className="text-center">{data.difference}</TableCell>
-                <TableCell className="text-center">{data.dailyExp}</TableCell>
+      {/* Table */}
+      <div className="relative">
+        {/* Fixed Header */}
+        <div className="bg-gray-50 dark:bg-gray-800 border rounded-t-md">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-48 text-center font-semibold">日期</TableHead>
+                <TableHead className="w-24 text-center font-semibold">当前等级</TableHead>
+                <TableHead className="text-center font-semibold">当前经验</TableHead>
+                <TableHead className="text-center font-semibold">所差总经验</TableHead>
+                <TableHead className="text-center font-semibold">日均经验</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </ScrollArea>
+            </TableHeader>
+          </Table>
+        </div>
+
+        {/* Scrollable Body */}
+        <ScrollArea className="h-[600px] w-full border-x border-b rounded-b-md">
+          <Table>
+            <TableBody>
+              {calculationResult?.dailyExpDetails.map((data) => (
+                <TableRow
+                  key={data.date}
+                  data-level={data.date}
+                  className={cn('hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors')}
+                >
+                  <TableCell className="w-48 text-center font-medium">{data.date}</TableCell>
+                  <TableCell className="w-24 text-center">{data.currentLevel}</TableCell>
+                  <TableCell className="text-center">{data.exp}</TableCell>
+                  <TableCell className="text-center">{data.difference}</TableCell>
+                  <TableCell className="text-center">{data.dailyExp}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </div>
     </div>
   )
 }
